@@ -1,13 +1,11 @@
-// interface MainProps extends React.ComponentProps<"main"> {}
 "use client"
 
 import Form from "./Form";
 import Input from "./Input";
 import Button from "./Button";
-import { Suspense, useActionState, useState } from "react";
-import {  useSuspenseQuery } from "@tanstack/react-query";
+import { useActionState } from "react";
+import {  useQuery } from "@tanstack/react-query";
 import MovieCard from "./MovieCard";
-import { ErrorBoundary } from "react-error-boundary";
 
 
 
@@ -36,6 +34,18 @@ type Rating = {
     Source: string,
     Rating: string
 }
+
+const fetchMovies = async (movie: string) => {
+    const response = await fetch(`/api?movie=${movie}`, {
+                                            method: "GET",
+                                        })
+    if(!response.ok){
+        throw new Error("An error occurred while fetching data")
+    }
+    const jsonResponse = await response.json()
+    return jsonResponse
+
+}
 export default function Main(){
     const handleSubmit =  (prevState: string, formData: FormData): string => {
         const movie = formData.get("movie") as string
@@ -43,22 +53,31 @@ export default function Main(){
     }
     const [movie, formAction, isPending ] = useActionState(handleSubmit, '')
 
-    const { data, error} = useSuspenseQuery<MovieData[]>({
+    const { data, error, isLoading} = useQuery<MovieData[]>({
 									queryKey: ["movie", movie],
 									queryFn: async () => {
-										return fetch(`/api?movie=${movie}`, {
+                                        const response = await fetch(`/api?movie=${movie}`, {
                                             method: "GET",
-                                        }).then((res) => res.json())
-                                       
+                                        })
+                                        if(!response.ok){
+                                            throw new Error("An error occurred while fetching data")
+                                        }
+
+                                        const jsonResponse = await response.json()
+                                        return jsonResponse
                                     },
+                                    enabled: !!movie
                                         
 	})
     console.log(data, "data")
     let contentToDisplay = null
-    if(error || !data){
-        throw error
+    if(isLoading){
+        contentToDisplay = <p>loading...</p>
     }
-	if(Array.isArray(data)){
+    else if(error || !data){
+        contentToDisplay = <p>Please check your internet connection or spelling</p>
+    }
+	else if(Array.isArray(data)){
         console.log(data, "data")
         contentToDisplay = data.map((movie) => <MovieCard key={movie.imdbID} {...movie} />)
     }
@@ -68,11 +87,11 @@ export default function Main(){
                 <Input  />
                 <Button pending={isPending} />
             </Form>
-            <ErrorBoundary fallback={<p>Please check your internet connection or spelling</p>}>
-                <Suspense fallback={<p>loading...</p>}>
+            {/* <ErrorBoundary fallback={<p>Please check your internet connection or spelling</p>}>
+                <Suspense fallback={<p>loading...</p>}> */}
                     {contentToDisplay}
-                </Suspense>
-            </ErrorBoundary>
+                {/* </Suspense>
+            </ErrorBoundary> */}
         </main>
     )
 

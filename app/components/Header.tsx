@@ -13,6 +13,7 @@ export default function Header({children, title}: HeaderProps){
                 alt="3 pictures of famous movies, Scarface, The Dark Night and The Godfather" 
                 fill={true}
                 placeholder="blur"
+                quality={80}
                 className="w-full h-inherit brightness-80 object-cover object-[35%_25%] xs:object-[65%_25%]"
             />
             <h1 className="z-1 font-extrabold text-[2.625rem] text-white">{title}</h1>
