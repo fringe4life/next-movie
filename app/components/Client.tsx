@@ -9,6 +9,7 @@ const  queryClient = new QueryClient({
                 staleTime: 259_200_000,
                 retry: 3,
                 gcTime: 259_200_000,
+                retryOnMount: false,
             },
         },
     })

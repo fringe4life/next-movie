@@ -8,39 +8,35 @@ type InitialMovieData = {
     imdbID: string;
     Poster: string;
 }
-
-
-
-
-export type InitialResponse = {
+type InitialResponse = {
     Search: InitialMovieData[]
     Response: boolean
 }
 
-
+/**
+ * @abstract fetches the movie data from the server
+ * @param request the request object
+ * @returns it returns either the movies found in the search or an error message
+ */
 export async function GET(request: NextRequest){
-    console.log("hello from api")
 
     const searchParams = request.nextUrl.searchParams;
 
     const movieTitle = searchParams.get('movie');
 
     if(!movieTitle){
-        return NextResponse.json({error: "Missing movie title"}, {status: 400})
+        return NextResponse.json(undefined, {status: 400})
     }
 
     const movieData = await fetch(`${process.env.BASE_URL}?apikey=${process.env.API_KEY}&s=${movieTitle}&type=movie`)
 
     if(!movieData.ok){
-        return NextResponse.json(undefined, {status: 500})
+        return NextResponse.json(undefined, {status: 404})
     }
     const initialMovies = await movieData.json() as InitialResponse
     const fetchInParallel = initialMovies.Search.map(({imdbID}) => fetch(`${process.env.BASE_URL}?apikey=${process.env.API_KEY}&i=${imdbID}`))
     
-    console.log(fetchInParallel)
     const jsonResponses = await Promise.all(fetchInParallel)
-
-    // check jsonResponses for errors
 
     const successfulResponses = jsonResponses.filter(response => response.ok)
 
@@ -49,6 +45,8 @@ export async function GET(request: NextRequest){
     }
 
     const movies = await Promise.all(successfulResponses.map(response => response.json()))
-    console.log(movies)
-    return NextResponse.json(movies, {status: 200})
+    console.log(movies, "movies")
+    // remove movies without a poster
+    const filteredMovies = movies.filter(movie => movie.Poster !== "N/A")
+    return NextResponse.json(filteredMovies, {status: 200})
 }

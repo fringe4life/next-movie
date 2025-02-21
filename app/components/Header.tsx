@@ -6,7 +6,7 @@ interface HeaderProps extends React.ComponentPropsWithoutRef<"header"> {
 //  bg-blend-darken bg-no-repeat  bg-(image:--header)  bg-[35%_25%] xs:bg-[65%_25%] bg-[35%_25%] xs:bg-[65%_25%] bg-black/70
 export default function Header({children, title}: HeaderProps){
     return (
-        <header className="relative max-w-[34.375rem] w-full h-64  flex flex-col xs:flex-row justify-around items-center ">
+        <header className="mx-auto relative max-w-[34.375rem]  min-h-64  flex flex-col  justify-around   items-center xs:flex-row  ">
             
             <Image 
                 src={headerImage} 
@@ -14,7 +14,7 @@ export default function Header({children, title}: HeaderProps){
                 fill={true}
                 placeholder="blur"
                 quality={80}
-                className="w-full h-inherit brightness-80 object-cover object-[35%_25%] xs:object-[65%_25%]"
+                className="w-full h-inherit brightness-35 object-cover object-[55%_25%] "
             />
             <h1 className="z-1 font-extrabold text-[2.625rem] text-white">{title}</h1>
             {children}
