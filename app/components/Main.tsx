@@ -21,10 +21,11 @@ import notFound from "@public/not-found.svg"
 import EmptyStateTitle from "./EmptyStateTitle";
 
 export default function Main(){
+    "use client"
     // state for managing the movie search
     const [movie, setMovie] = useState<string>('')
     // state for managing the movie data
-    const [movies, setMovies] = useState<MovieData[]>(window?.localStorage.getItem("movies") ? JSON.parse(localStorage.getItem("movies") || "[]") : [])
+    const [movies, setMovies] = useState<MovieData[]>(window?.localStorage.getItem("movies") ? JSON.parse(window?.localStorage.getItem("movies") || "[]") : [])
 
     /**
      * this is the content to display based on the state of the query
@@ -50,7 +51,7 @@ export default function Main(){
      * @param movie the movie to add or remove from localStorage
      */
     const toggleMovieLocalStorage = (movie: MovieData) => {
-        
+        if(typeof window === "undefined") return
         if(!movies.some(m => m.imdbID === movie.imdbID)){
             movies.push(movie)
             window?.localStorage.setItem("movies", JSON.stringify(movies))
@@ -58,7 +59,7 @@ export default function Main(){
 			const filteredMovies = movies.filter(m => m.imdbID !== movie.imdbID)
             window?.localStorage.setItem("movies", JSON.stringify(filteredMovies))
         }
-        setMovies(window?.localStorage.getItem("movies") ? JSON.parse(localStorage.getItem("movies") || "[]") : [])
+        setMovies(window?.localStorage.getItem("movies") ? JSON.parse(window?.localStorage.getItem("movies") || "[]") : [])
         contentToDisplay = movies.map((movie) => <MovieCard toggleMovies={toggleMovieLocalStorage} key={movie.imdbID} movie={movie} />)
     }
 
