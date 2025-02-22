@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`mx-auto max-w-[34.375rem] min-w-dvw  ${inter.className}`}>
+      <body className={`mx-auto max-w-[34.375rem] flex flex-col min-h-dvh ${inter.className}`}>
         {children}
       </body>
     </html>

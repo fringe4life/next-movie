@@ -11,12 +11,30 @@ import Loading from "./Loading";
 
 import type { MovieData } from "./MovieCard";
 import { usePathname } from "next/navigation";
+import EmptySection from "./EmptySection";
 
+import vhs from "@public/vhs.svg"
+import addWatchlist from "@public/add.svg"
 
+import notFound from "@public/not-found.svg"
+
+import EmptyStateTitle from "./EmptyStateTitle";
+
+console.log(addWatchlist, "addWatchlist")
 
 export default function Main(){
     // state for managing the movie search
-    const [movie, setMovie] = useState('')
+    const [movie, setMovie] = useState<string>('')
+    // state for managing the movie data
+    const [movies, setMovies] = useState<MovieData[]>(localStorage.getItem("movies") ? JSON.parse(localStorage.getItem("movies") || "[]") : [])
+
+    /**
+     * this is the content to display based on the state of the query
+     */
+    let contentToDisplay: React.ReactNode = <EmptySection>
+        <img className="-translate-y-2" src={vhs.src} alt="old fashioned vhs tape icon" />
+        <EmptyStateTitle className="-translate-y-2" title="Start exploring"/>
+    </EmptySection>
 
     /**
      * @abstract updates the state
@@ -29,23 +47,21 @@ export default function Main(){
         setMovie(movie ? movie : "")
     }
 
-    
-
-    
-
     /**
      * @abstract adds or removes a movie from localStorage
      * @param movie the movie to add or remove from localStorage
      */
     const toggleMovieLocalStorage = (movie: MovieData) => {
-        const existingMovies = JSON.parse(localStorage.getItem("movies") || "[]") as MovieData[]
-        if(!existingMovies.some(m => m.imdbID === movie.imdbID)){
-            existingMovies.push(movie)
-            localStorage.setItem("movies", JSON.stringify(existingMovies))
+        
+        if(!movies.some(m => m.imdbID === movie.imdbID)){
+            movies.push(movie)
+            localStorage.setItem("movies", JSON.stringify(movies))
         } else {
-			const filteredMovies = existingMovies.filter(m => m.imdbID !== movie.imdbID)
+			const filteredMovies = movies.filter(m => m.imdbID !== movie.imdbID)
             localStorage.setItem("movies", JSON.stringify(filteredMovies))
         }
+        setMovies(localStorage.getItem("movies") ? JSON.parse(localStorage.getItem("movies") || "[]") : [])
+        contentToDisplay = movies.map((movie) => <MovieCard toggleMovies={toggleMovieLocalStorage} key={movie.imdbID} movie={movie} />)
     }
 
     /**
@@ -60,24 +76,25 @@ export default function Main(){
                                     },
                                     enabled: !!movie,
 	})
-    /**
-     * this is the content to display based on the state of the query
-     */
-    let contentToDisplay = null
+    
     if(isLoading){
         contentToDisplay = <Loading />
     }
     else if(error ){
-        contentToDisplay = <p>Please check your internet connection or spelling</p>
+        contentToDisplay = <EmptySection>
+            <img className="w-30 h-30" src={notFound.src} alt="Your movie wasn't found"/>
+            <EmptyStateTitle title="Unable to find what you're looking for. Please try another search."/>
+            </EmptySection>
     }
 	else if(Array.isArray(data)){
         console.log(data, "data")
-        contentToDisplay = data.map((movie) => <MovieCard toggleMovies={toggleMovieLocalStorage} key={movie.imdbID} movie={movie} />)
-    }
-
+        contentToDisplay = data.map((movie) => <MovieCard toggleMovies={toggleMovieLocalStorage} key={movie.imdbID} movie={movie} />
+    )
+}
+    
+    
 
     const pathName = usePathname()
-    console.log(pathName, " pathname")
 
     let displayForm: JSX.Element | null = <Form handleSubmit={handleSubmit} title={movie} >
                 <Input  />
@@ -86,16 +103,30 @@ export default function Main(){
 
     if(pathName === '/watchlist'){
         displayForm = null
-        contentToDisplay = localStorage.getItem("movies") ? 
-            JSON.parse(localStorage.getItem("movies") || "[]").map((movie: MovieData) => <MovieCard toggleMovies={toggleMovieLocalStorage} key={movie.imdbID} movie={movie} />) : 
-            <p>Your watchlist is empty</p>
+
+        // fetch watchlist from local storage and map it to MovieCard component
+        contentToDisplay = movies.map((movie) => <MovieCard toggleMovies={toggleMovieLocalStorage} key={movie.imdbID} movie={movie} />)
+        
+        if(movies.length === 0) contentToDisplay =
+            <EmptySection  >
+                <EmptyStateTitle title="Your watchlist is looking a little empty..."/>
+                
+                    
+                    <p className="text-sm text-[#363636]"><img src={addWatchlist.src} alt="add to watchlist" className="w-4 h-4 inline-block dark:fill-white"  /> Let's add some movies!</p>
+                
+            </EmptySection>
+
+            console.log(contentToDisplay)
     }
 
     return (
-        <main className="mx-auto max-w-[34.375rem] flex flex-col items-center px-[2%]  xs:px-[5%] ">
+        <>
+        
+        <main aria-live="polite" className=" flex-1  flex flex-col  items-center gap-2 dark:bg-[#121212]">
             {displayForm}
-            <section >{contentToDisplay}</section>        
+            {contentToDisplay}      
         </main>
+        </>
     )
 
 }

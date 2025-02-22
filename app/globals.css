@@ -1,5 +1,27 @@
 @import "tailwindcss";
 
+@view-transition {
+	/* biome-ignore lint/correctness/noUnknownProperty: <explanation> */
+	navigation: auto;
+}
+
+::view-transition-group(root) {
+	animation: scale 250ms ease-in-out 0;
+}
+
+:root {
+	--height-empty: calc(100dvh - 208px);
+}
+
+@keyframes scale {
+	from {
+		transform: scale(0) translateX(-100%);
+	}
+	to {
+		transform: scale(1) translateX(0);
+	}
+}
+
 @theme {
 	--breakpoint-xs: 31.25rem;
 }
@@ -13,6 +35,7 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
+	
 	*,
 	::after,
 	::before,
