@@ -1,4 +1,4 @@
-
+"use client"
 import Image from "next/image";
 import starIcon from '../../public/star.svg'
 import addToWatchList from '../../public/add.svg'
@@ -23,8 +23,8 @@ export default function MovieCard({toggleMovies, movie:{imdbID, Title, Poster, P
     
     const titleToUse = Title.includes(":") ? Title.split(":")[1] : Title
 
-    const iconToUse = localStorage.getItem("movies") ? 
-    JSON.parse(localStorage.getItem("movies") || "[]").some((m: MovieData) => m.imdbID === imdbID) ? 
+    const iconToUse = window?.localStorage.getItem("movies") ? 
+    JSON.parse(window?.localStorage.getItem("movies") || "[]").some((m: MovieData) => m.imdbID === imdbID) ? 
     removeFromWatchList : 
     addToWatchList : 
     addToWatchList
