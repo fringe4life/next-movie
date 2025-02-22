@@ -45,7 +45,7 @@ export async function GET(request: NextRequest){
     }
 
     const movies = await Promise.all(successfulResponses.map(response => response.json()))
-    console.log(movies, "movies")
+    
     // remove movies without a poster
     const filteredMovies = movies.filter(movie => movie.Poster !== "N/A")
     return NextResponse.json(filteredMovies, {status: 200})

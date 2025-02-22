@@ -20,13 +20,11 @@ import notFound from "@public/not-found.svg"
 
 import EmptyStateTitle from "./EmptyStateTitle";
 
-console.log(addWatchlist, "addWatchlist")
-
 export default function Main(){
     // state for managing the movie search
     const [movie, setMovie] = useState<string>('')
     // state for managing the movie data
-    const [movies, setMovies] = useState<MovieData[]>(localStorage.getItem("movies") ? JSON.parse(localStorage.getItem("movies") || "[]") : [])
+    const [movies, setMovies] = useState<MovieData[]>(window?.localStorage.getItem("movies") ? JSON.parse(localStorage.getItem("movies") || "[]") : [])
 
     /**
      * this is the content to display based on the state of the query
@@ -55,12 +53,12 @@ export default function Main(){
         
         if(!movies.some(m => m.imdbID === movie.imdbID)){
             movies.push(movie)
-            localStorage.setItem("movies", JSON.stringify(movies))
+            window?.localStorage.setItem("movies", JSON.stringify(movies))
         } else {
 			const filteredMovies = movies.filter(m => m.imdbID !== movie.imdbID)
-            localStorage.setItem("movies", JSON.stringify(filteredMovies))
+            window?.localStorage.setItem("movies", JSON.stringify(filteredMovies))
         }
-        setMovies(localStorage.getItem("movies") ? JSON.parse(localStorage.getItem("movies") || "[]") : [])
+        setMovies(window?.localStorage.getItem("movies") ? JSON.parse(localStorage.getItem("movies") || "[]") : [])
         contentToDisplay = movies.map((movie) => <MovieCard toggleMovies={toggleMovieLocalStorage} key={movie.imdbID} movie={movie} />)
     }
 
@@ -87,7 +85,6 @@ export default function Main(){
             </EmptySection>
     }
 	else if(Array.isArray(data)){
-        console.log(data, "data")
         contentToDisplay = data.map((movie) => <MovieCard toggleMovies={toggleMovieLocalStorage} key={movie.imdbID} movie={movie} />
     )
 }
@@ -115,8 +112,6 @@ export default function Main(){
                     <p className="text-sm text-[#363636]"><img src={addWatchlist.src} alt="add to watchlist" className="w-4 h-4 inline-block dark:fill-white"  /> Let&apos;s add some movies!</p>
                 
             </EmptySection>
-
-            console.log(contentToDisplay)
     }
 
     return (
