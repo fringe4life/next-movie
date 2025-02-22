@@ -13,6 +13,14 @@
 	--height-empty: calc(100dvh - 208px);
 }
 
+main > section {
+	width: 85%;
+}
+
+main > section + section {
+	border-top: 2px solid grey;
+}
+
 @keyframes scale {
 	from {
 		transform: scale(0) translateX(-100%);
@@ -35,7 +43,6 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
-	
 	*,
 	::after,
 	::before,

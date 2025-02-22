@@ -22,7 +22,6 @@ import EmptyStateTitle from "./EmptyStateTitle";
 import dynamic from "next/dynamic";
 
 export default function Main(){
-    "use client"
     // state for managing the movie search
     const [movie, setMovie] = useState<string>('')
     // state for managing the movie data
@@ -86,6 +85,8 @@ export default function Main(){
             </EmptySection>
     }
 	else if(Array.isArray(data)){
+        console.log(data)
+        console.log(movie)
         contentToDisplay = data.map((movie) => <DynamicMovieCard toggleMovies={toggleMovieLocalStorage} key={movie.imdbID} movie={movie} />
     )
 }
@@ -118,7 +119,7 @@ export default function Main(){
     return (
         <>
         
-        <main aria-live="polite" className=" flex-1  flex flex-col  items-center gap-2 dark:bg-[#121212]">
+        <main aria-live="polite" className=" flex-1 items-center  flex flex-col  gap-6 dark:bg-[#121212] pb-6">
             {displayForm}
             {contentToDisplay}      
         </main>

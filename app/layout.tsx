@@ -22,8 +22,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`mx-auto max-w-[34.375rem] flex flex-col min-h-dvh ${inter.className}`}>
-        {children}
+      <body className={`mx-auto  max-w-[34.375rem] min-w-[300px]  ${inter.className}`}>
+        <div className="flex flex-col min-h-dvh ">
+          {children}
+        </div>
       </body>
     </html>
   );
