@@ -17,10 +17,9 @@ export type MovieData = {
 interface MovieCardProps {
     movie: MovieData,
     toggleMovies: (movie: MovieData) => void
-    watchlist?: boolean
 }
 
-export default function MovieCard({toggleMovies, movie:{imdbID, Title, Poster, Plot, imdbRating, Genre, Runtime}, watchlist}: MovieCardProps){
+export default function MovieCard({toggleMovies, movie:{imdbID, Title, Poster, Plot, imdbRating, Genre, Runtime}}: MovieCardProps){
     
     const titleToUse = Title.includes(":") ? Title.split(":")[1] : Title
 
