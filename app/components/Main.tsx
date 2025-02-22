@@ -82,8 +82,8 @@ export default function Main(){
     }
     else if(error ){
         contentToDisplay = <EmptySection>
-            <img className="w-30 h-30" src={notFound.src} alt="Your movie wasn't found"/>
-            <EmptyStateTitle title="Unable to find what you're looking for. Please try another search."/>
+            <img className="w-30 h-30" src={notFound.src} alt="Your movie wasn&apos;t found"/>
+            <EmptyStateTitle title="Unable to find what you&apos;re looking for. Please try another search."/>
             </EmptySection>
     }
 	else if(Array.isArray(data)){
@@ -112,7 +112,7 @@ export default function Main(){
                 <EmptyStateTitle title="Your watchlist is looking a little empty..."/>
                 
                     
-                    <p className="text-sm text-[#363636]"><img src={addWatchlist.src} alt="add to watchlist" className="w-4 h-4 inline-block dark:fill-white"  /> Let's add some movies!</p>
+                    <p className="text-sm text-[#363636]"><img src={addWatchlist.src} alt="add to watchlist" className="w-4 h-4 inline-block dark:fill-white"  /> Let&apos;s add some movies!</p>
                 
             </EmptySection>
 
