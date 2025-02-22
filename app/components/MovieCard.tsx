@@ -28,11 +28,8 @@ export default function MovieCard({toggleMovies, movie:{imdbID, Title, Poster, P
     addToWatchList : 
     addToWatchList
 
-    "use client"
-    console.log(iconToUse)
-
     return (
-        <section className=" pt-6 flex xs:gap-4 gap-2 dark:text-white">
+        <section className=" py-6 flex xs:gap-4 gap-2 dark:text-white">
             <Image className="h-37 w-25 rounded-xs " src={Poster} width={100} height={148} alt={Title} />
             <section className="xs:my-[0.625rem]">
                 <header className="flex items-center"> 
