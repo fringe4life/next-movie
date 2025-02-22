@@ -22,9 +22,7 @@ interface MovieCardProps {
 export default function MovieCard({toggleMovies, movie:{imdbID, Title, Poster, Plot, imdbRating, Genre, Runtime}}: MovieCardProps){
     
     const titleToUse = Title.includes(":") ? Title.split(":")[1] : Title
-    let iconToUse = addToWatchList
-    if(typeof window === "undefined") iconToUse = addToWatchList
-    else window?.localStorage.getItem("movies") ? 
+    const iconToUse =  window?.localStorage.getItem("movies") ? 
     JSON.parse(window?.localStorage.getItem("movies") || "[]").some((m: MovieData) => m.imdbID === imdbID) ? 
     removeFromWatchList : 
     addToWatchList : 

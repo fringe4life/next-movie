@@ -1,6 +1,9 @@
 "use client"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Main from "./Main";
+
+import dynamic from "next/dynamic";
+
+const DynamicMain = dynamic(() => import('./Main'), {ssr: false})
 
 const  queryClient = new QueryClient({
         defaultOptions: {
@@ -18,7 +21,7 @@ const  queryClient = new QueryClient({
 export default function Home() {
     return (
         <QueryClientProvider client={queryClient} >
-            <Main />
+            <DynamicMain />
         </QueryClientProvider>
     )
 }

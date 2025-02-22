@@ -5,9 +5,9 @@ import Input from "./Input";
 import Button from "./Button";
 import { type JSX, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import MovieCard from "./MovieCard";
 import Loading from "./Loading";
 
+const DynamicMovieCard = dynamic(() => import('./MovieCard'), {ssr: false})
 
 import type { MovieData } from "./MovieCard";
 import { usePathname } from "next/navigation";
@@ -19,16 +19,15 @@ import addWatchlist from "@public/add.svg"
 import notFound from "@public/not-found.svg"
 
 import EmptyStateTitle from "./EmptyStateTitle";
+import dynamic from "next/dynamic";
 
 export default function Main(){
     "use client"
     // state for managing the movie search
     const [movie, setMovie] = useState<string>('')
     // state for managing the movie data
-    const [movies, setMovies] = useState<MovieData[]>([])
-    if(typeof window !== "undefined" ){
-        setMovies(window?.localStorage.getItem("movies") ? JSON.parse(window?.localStorage.getItem("movies") || "[]") : [])
-				}
+    const [movies, setMovies] = useState<MovieData[]>(window?.localStorage.getItem("movies") ? JSON.parse(window?.localStorage.getItem("movies") || "[]") : [])
+    
     /**
      * this is the content to display based on the state of the query
      */
@@ -53,7 +52,6 @@ export default function Main(){
      * @param movie the movie to add or remove from localStorage
      */
     const toggleMovieLocalStorage = (movie: MovieData) => {
-        if(typeof window === "undefined") return
         if(!movies.some(m => m.imdbID === movie.imdbID)){
             movies.push(movie)
             window?.localStorage.setItem("movies", JSON.stringify(movies))
@@ -62,7 +60,7 @@ export default function Main(){
             window?.localStorage.setItem("movies", JSON.stringify(filteredMovies))
         }
         setMovies(window?.localStorage.getItem("movies") ? JSON.parse(window?.localStorage.getItem("movies") || "[]") : [])
-        contentToDisplay = movies.map((movie) => <MovieCard toggleMovies={toggleMovieLocalStorage} key={movie.imdbID} movie={movie} />)
+        contentToDisplay = movies.map((movie) => <DynamicMovieCard toggleMovies={toggleMovieLocalStorage} key={movie.imdbID} movie={movie} />)
     }
 
     /**
@@ -88,7 +86,7 @@ export default function Main(){
             </EmptySection>
     }
 	else if(Array.isArray(data)){
-        contentToDisplay = data.map((movie) => <MovieCard toggleMovies={toggleMovieLocalStorage} key={movie.imdbID} movie={movie} />
+        contentToDisplay = data.map((movie) => <DynamicMovieCard toggleMovies={toggleMovieLocalStorage} key={movie.imdbID} movie={movie} />
     )
 }
     
@@ -105,7 +103,7 @@ export default function Main(){
         displayForm = null
 
         // fetch watchlist from local storage and map it to MovieCard component
-        contentToDisplay = movies.map((movie) => <MovieCard toggleMovies={toggleMovieLocalStorage} key={movie.imdbID} movie={movie} />)
+        contentToDisplay = movies.map((movie) => <DynamicMovieCard toggleMovies={toggleMovieLocalStorage} key={movie.imdbID} movie={movie} />)
         
         if(movies.length === 0) contentToDisplay =
             <EmptySection  >
