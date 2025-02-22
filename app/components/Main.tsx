@@ -25,8 +25,10 @@ export default function Main(){
     // state for managing the movie search
     const [movie, setMovie] = useState<string>('')
     // state for managing the movie data
-    const [movies, setMovies] = useState<MovieData[]>(window?.localStorage.getItem("movies") ? JSON.parse(window?.localStorage.getItem("movies") || "[]") : [])
-
+    const [movies, setMovies] = useState<MovieData[]>([])
+    if(typeof window !== "undefined" ){
+        setMovies(window?.localStorage.getItem("movies") ? JSON.parse(window?.localStorage.getItem("movies") || "[]") : [])
+				}
     /**
      * this is the content to display based on the state of the query
      */
