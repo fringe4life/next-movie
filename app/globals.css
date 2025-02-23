@@ -13,10 +13,6 @@ html {
 	animation: scale 250ms ease-in-out 0;
 }
 
-:root {
-	--height-empty: calc(100dvh - 208px);
-}
-
 main > section {
 	width: 85%;
 }
