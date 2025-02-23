@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+html {
+	color-scheme: light dark;
+}
+
 @view-transition {
 	/* biome-ignore lint/correctness/noUnknownProperty: <explanation> */
 	navigation: auto;
