@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  compiler: {
+    removeConsole: {exclude: ['error', 'warn', "log", "info"]},
+  },
   /* config options here */
   images: {
     remotePatterns: [
@@ -13,9 +16,9 @@ const nextConfig: NextConfig = {
       }
     ],
   },
-  experimental:{
-    reactCompiler: true
-  }
+  // experimental:{
+  //   reactCompiler: true
+  // }
 };
 
 export default nextConfig;
