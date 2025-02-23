@@ -4,6 +4,10 @@ html {
 	color-scheme: light dark;
 }
 
+p {
+	text-wrap: pretty;
+}
+
 @view-transition {
 	/* biome-ignore lint/correctness/noUnknownProperty: <explanation> */
 	navigation: auto;
