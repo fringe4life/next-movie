@@ -117,7 +117,7 @@ export default function Main() {
     return (
         <>
 
-            <main aria-live="polite" className=" flex-1 items-center  flex flex-col   dark:bg-[#121212]">
+            <main aria-live="polite" className="bg-white flex-1 items-center  flex flex-col   dark:bg-[#121212]">
                 {displayForm}
                 {contentToDisplay}
             </main>
