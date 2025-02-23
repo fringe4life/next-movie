@@ -48,6 +48,6 @@ export async function GET(request: NextRequest) {
 
     // remove movies without a poster
     const filteredMovies = movies.filter(movie => movie.Poster !== "N/A" || movie.Plot !== "N/A")
-    console.log(filteredMovies)
+
     return NextResponse.json(filteredMovies, { status: 200 })
 }
