@@ -6,7 +6,7 @@ import Button from "./form/Button";
 import { Suspense} from "react";
 import {  useSuspenseQuery } from "@tanstack/react-query";
 import Loading from "./Loading";
-
+import Image from "next/image";
 // import {
 //   Pagination,
 //   PaginationContent,
@@ -69,8 +69,8 @@ function useMovie(movie: Maybe<string>, page: number){
     /**
      * this is the content to display based on the state of the query
      */
-    const contentToDisplay: React.ReactNode = <EmptySection>
-        <img className="-translate-y-2" src={vhs.src} alt="old fashioned vhs tape icon" />
+    const contentToDisplay = <EmptySection>
+        <Image width='70' height='62' className="-translate-y-2" src={vhs.src} alt="old fashioned vhs tape icon" />
         <EmptyStateTitle className="-translate-y-2" title="Start exploring" />
     </EmptySection>
 

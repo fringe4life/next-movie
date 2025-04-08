@@ -1,6 +1,3 @@
-interface ButtonProps extends React.ComponentPropsWithoutRef<"button"> {
-    // pending: boolean
-}
 
 export default function Button({children, onClick}: React.ComponentPropsWithoutRef<"button">){
 
