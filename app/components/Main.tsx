@@ -27,9 +27,6 @@ import EmptyStateTitle from "./EmptyStateTitle";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import MovieCard from "./movie/MovieCard";
-import { ErrorBoundary } from "next/dist/client/components/error-boundary";
-// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
-import Error from "../error";
 import { useSearchParams, useRouter } from "next/navigation";
 
 
@@ -87,13 +84,10 @@ function useMovie(movie: Maybe<string>, page: number){
                 <Input />
                 <Button  >Search</Button>
             </Form>
-            <ErrorBoundary errorComponent={Error}>
                 <Suspense fallback={<Loading />}>
                     {movie ? <Movies movie={movie} page={page} /> : contentToDisplay}
                     {movie ? <Button onClick={handlePage}>Next Page</Button> : null}
                 </Suspense>
-                
-            </ErrorBoundary>
         </main>
     )
 
