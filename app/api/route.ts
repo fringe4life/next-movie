@@ -1,15 +1,14 @@
-"server only"
+'use server'
 
 import { type NextRequest, NextResponse } from "next/server"
 
-
 type InitialMovieData = {
-    Title: string;
-    imdbID: string;
-    Poster: string;
+    title: string;
+    id: number;
+    poster_path: string;
 }
 type InitialResponse = {
-    Search: InitialMovieData[]
+    results: InitialMovieData[]
     Response: boolean
 }
 
@@ -18,23 +17,40 @@ type InitialResponse = {
  * @param request the request object
  * @returns it returns either the movies found in the search or an error message
  */
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
 
-    const searchParams = request.nextUrl.searchParams;
+    // const searchParams = request.nextUrl.searchParams;
 
-    const movieTitle = searchParams.get('movie');
+    // const movieTitle = searchParams.get('movie');
 
+    // const pageNumber = searchParams.get('page')
+    // console.log(pageNumber, " pageNumber")
+    // console.log(movieTitle, ' movie' )
+
+    const {movie:movieTitle, page: pageNumber} = await request.json()
     if (!movieTitle) {
+
+        console.log("no movie title")
         return NextResponse.json(undefined, { status: 400 })
     }
-
-    const movieData = await fetch(`${process.env.BASE_URL}?apikey=${process.env.API_KEY}&s=${movieTitle}&type=movie`)
-
+    const OPTIONS = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${process.env.AUTH}`
+        }
+    }
+    const initialUrl = `${process.env.BASE_URL}search/movie?query=${movieTitle}&page=${pageNumber}`
+  
+    const movieData = await fetch(initialUrl, OPTIONS)
+    
     if (!movieData.ok) {
         return NextResponse.json(undefined, { status: 404 })
     }
     const initialMovies = await movieData.json() as InitialResponse
-    const fetchInParallel = initialMovies.Search.map(({ imdbID }) => fetch(`${process.env.BASE_URL}?apikey=${process.env.API_KEY}&i=${imdbID}`))
+    const secondURL = `${process.env.BASE_URL}movie/`
+    console.log(secondURL, ' secondURL')
+    const fetchInParallel = initialMovies.results.map(({ id }) => fetch(`${secondURL}${id}`, OPTIONS))
 
     const jsonResponses = await Promise.all(fetchInParallel)
 
@@ -47,7 +63,7 @@ export async function GET(request: NextRequest) {
     const movies = await Promise.all(successfulResponses.map(response => response.json()))
 
     // remove movies without a poster
-    const filteredMovies = movies.filter(movie => movie.Poster !== "N/A" || movie.Plot !== "N/A")
-
+    const filteredMovies = movies.filter(movie => { console.log(movie.poster_path); return  movie.poster_path !== null  })
+   
     return NextResponse.json(filteredMovies, { status: 200 })
 }

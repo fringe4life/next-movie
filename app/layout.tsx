@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="bg-neutral-400">
-      <body className={`mx-auto  max-w-[34.375rem] min-w-[300px]  ${inter.className}`}>
+      <body className={`mx-auto  max-w-[34.375rem] min-w-75  ${inter.className}`}>
         <div className="flex flex-col min-h-dvh ">
           {children}
         </div>

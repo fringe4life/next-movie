@@ -1,4 +1,4 @@
-import searchIcon from "../../public/searchIcon.svg"
+import searchIcon from "../../../public/searchIcon.svg"
 import Image from "next/image"
 export default function Input(){
     return <div className="grow-3 shrink width-[70%]">
