@@ -36,7 +36,9 @@ const  queryClient = new QueryClient()
 export default function Home() {
     return (
         <QueryClientProvider client={queryClient} >
+            <Suspense fallback={<p>loading...</p>}>
                 <Main />
+            </Suspense>
         </QueryClientProvider>
     )
 }
